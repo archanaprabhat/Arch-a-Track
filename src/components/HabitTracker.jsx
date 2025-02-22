@@ -2,7 +2,8 @@ import {useState} from 'react'
 import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
 export default function HabitTracker() {
    const [currentDate, setCurrentDate] = useState(new Date());
-   const[newHabit, setNewHabit] = useState("")
+   const[newHabit, setNewHabit] = useState("");
+   const[habits, setHabits] = useState([]);
 
    const monthYear = currentDate.toLocaleDateString("default", {
     month:"long",
@@ -18,7 +19,11 @@ export default function HabitTracker() {
 
    const addHabit = () => {
     if(newHabit.trim()){
-      console.log("Added new Habit:", newHabit);
+      setHabits([...habits, {
+        id:Date.now(),
+        name:newHabit,
+        checked: Array(31).fill(false)
+      }])
       setNewHabit("")
     }
    }
@@ -40,6 +45,11 @@ export default function HabitTracker() {
         <div className='flex gap-4 max-w-3xl mb-8 w-screen '>
           <input type="text" placeholder='Add a new habit...' value={newHabit} onChange={(e) => setNewHabit(e.target.value)} className='p-6 rounded-lg border text-2xl flex-1 focus:outline-none shadow-lg focus:border-pink-400 transition ' />
           <button onClick={addHabit}><Plus size={60} color="#590d22" strokeWidth={3} /></button>
+          <ul>
+            {habits.map((habit) => (
+              <li key={habit.id}>{habit.name}</li>
+            ))}
+          </ul>
         </div>
     </div>
   )
