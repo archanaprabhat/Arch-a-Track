@@ -27,9 +27,13 @@ export default function HabitTracker() {
       setNewHabit("")
     }
    }
-
-
-    
+   const toggleDay = (habitIndex,dayIndex) => {
+    const newHabits = [...habits];
+    newHabits[habitIndex].checked[dayIndex] = !newHabits[habitIndex].checked[dayIndex];
+    setHabits(newHabits);
+   }
+  
+   
   return (
     <div className="bg-rose-300 h-screen w-screen flex flex-col items-center p-6 ">
         <h1 className="text-4xl font-bold text-center text-pink-800 mb-4 my-6 ">Arch•a•Track</h1>
@@ -42,15 +46,35 @@ export default function HabitTracker() {
         <ChevronRight size={48} color="#590d22" strokeWidth={3} />
         </button>
         </div>
-        <div className='flex gap-4 max-w-3xl mb-8 w-screen '>
+        <div className='flex gap-4 max-w-3xl mb-16 w-screen '>
           <input type="text" placeholder='Add a new habit...' value={newHabit} onChange={(e) => setNewHabit(e.target.value)} className='p-6 rounded-lg border text-2xl flex-1 focus:outline-none shadow-lg focus:border-pink-400 transition ' />
           <button onClick={addHabit}><Plus size={60} color="#590d22" strokeWidth={3} /></button>
-          <ul>
-            {habits.map((habit) => (
-              <li key={habit.id}>{habit.name}</li>
-            ))}
-          </ul>
+        </div>
+        <div className='w-full'>
+          <table >
+            <thead>
+              <tr>
+                <td className="border p-4 text font-bold">Habits</td>
+              {Array.from({length:31}, (_, i) =>(
+                 <th key={i} className="border p-3"> {i+1} </th>
+              ))}
+               </tr>  
+             </thead>
+             <tbody>
+              {habits.map((habit, habitIndex) => (
+                <tr key={habit.id}>
+                  <td className="border p-2 font-bold">{habit.name}</td>
+                  {habit.checked.map((checked, dayIndex) => (
+                    <td key={dayIndex} onClick={() => toggleDay(habitIndex,dayIndex)} className='border p-2 text-center cursor-pointer'>{checked ? "✔️" : "❌"}</td>
+                  ))}
+                </tr>
+              ))}
+             </tbody>
+              
+             
+          </table>
         </div>
     </div>
-  )
-}
+    
+  
+)};
