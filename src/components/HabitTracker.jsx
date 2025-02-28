@@ -1,16 +1,38 @@
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 import { ChevronLeft, ChevronRight, Plus, Check , X, Trash2 } from "lucide-react";
 export default function HabitTracker() {
    const [currentDate, setCurrentDate] = useState(new Date());
    const[newHabit, setNewHabit] = useState("");
    const[habits, setHabits] = useState([]);
+   const[isLoading, setIsLoading] = useState(true)
+
+   
+   useEffect(() => {
+    const savedHabits = localStorage.getItem('habits');
+    if(savedHabits) {
+      try{
+        setHabits(JSON.parse(savedHabits))
+      }
+      catch(e){
+        console.error("Error while parsing the Habits", e)
+      }
+    }
+    setIsLoading(false)
+   }, [])
+   useEffect(() => {
+    if(!isLoading){
+      localStorage.setItem('habits', JSON.stringify(habits))
+    }
+   }, [habits, isLoading])
+   
+
+   
 
    const monthYear = currentDate.toLocaleDateString("default", {
     month:"long",
     year:"numeric"
    })
-
-
+   
    const changeMonth = (offset) => {
     const newDate = new Date(currentDate);
     newDate.setMonth(newDate.getMonth() + offset)
