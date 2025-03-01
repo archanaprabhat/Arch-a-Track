@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react'
-import { ChevronLeft, ChevronRight, Plus, Check , X, Trash2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, Plus, Check , X, Trash2, Calendar, Sun, Moon } from "lucide-react";
 export default function HabitTracker() {
    const [currentDate, setCurrentDate] = useState(new Date());
    const[newHabit, setNewHabit] = useState("");
@@ -70,6 +70,13 @@ export default function HabitTracker() {
       setNewHabit("")
     }
    }
+
+   const handleKeyPress = (e) => {
+    if(e.key === "Enter"){
+      addHabit();
+    }
+   }
+
    const toggleDay = (habitIndex,dayIndex) => {
     const newHabits = [...habits];
     newHabits[habitIndex].checked[dayIndex] = !newHabits[habitIndex].checked[dayIndex];
@@ -134,21 +141,75 @@ export default function HabitTracker() {
    
   return (
     <div className={`${theme.bgMain} min-h-screen w-full flex flex-col items-center p-2 md:p-4 font-sans transition-colors duration-300`}>
-        <h1 className="text-4xl font-bold text-center text-pink-800 mb-4 my-6 ">Arch•a•Track</h1>
-        <div className='flex justify-between items-center w-1/2 mb-6'>
-        <button onClick={() => changeMonth(-1)} className='p-2 hover:bg-rose-100 rounded-full transition-colors'>
-        <ChevronLeft size={48} color="#590d22" strokeWidth={3} />
-        </button>
-        <h2 className='italic font-mono text-3xl'>{monthYear}</h2>
-        <button onClick={() => changeMonth(1)} className='p-2 hover:bg-rose-100 rounded-full transition-colors'>
-        <ChevronRight size={48} color="#590d22" strokeWidth={3} />
-        </button>
-        <button onClick={toggleTheme}>Theme</button>
+        {/* Header */}
+      <div className="w-full max-w-7xl">
+        <div className="flex justify-between items-center mb-4">
+          <div className="flex items-center">
+            <Calendar className={`${theme.textPrimary} mr-2`} size={28} />
+            <h1
+              className={`text-3xl md:text-4xl font-bold ${theme.textPrimary}`}
+            >
+              Arch•a•Track
+            </h1>
+          </div>
+          <button
+            onClick={toggleTheme}
+            className={`p-2 rounded-full ${theme.bgButtonHover} transition-colors`}
+            aria-label={
+              darkMode ? "Switch to light mode" : "Switch to dark mode"
+            }
+          >
+            {darkMode ? (
+              <Sun className={theme.textPrimary} size={24} />
+            ) : (
+              <Moon className={theme.textPrimary} size={24} />
+            )}
+          </button>
         </div>
-        <div className='flex gap-4 max-w-3xl mb-16 w-screen '>
-          <input type="text" placeholder='Add a new habit...' value={newHabit} onChange={(e) => setNewHabit(e.target.value)} className='p-6 rounded-lg border text-2xl flex-1 focus:outline-none shadow-lg focus:border-pink-400 transition ' />
-          <button onClick={addHabit}><Plus size={60} color="#590d22" strokeWidth={3} /></button>
+        {/* Month Navigation */}
+        <div className="flex justify-between items-center w-full max-w-md mx-auto mb-6">
+          <button
+            onClick={() => changeMonth(-1)}
+            className={`p-2 ${theme.bgButtonHover} rounded-full transition-colors duration-200`}
+            aria-label="Previous month"
+          >
+            <ChevronLeft size={28} className={theme.textPrimary} />
+          </button>
+          <h2
+            className={`text-xl md:text-2xl font-medium italic font-mono ${theme.textPrimary}`}
+          >
+            {monthYear}
+          </h2>
+          <button
+            onClick={() => changeMonth(1)}
+            className={`p-2 ${theme.bgButtonHover} rounded-full transition-colors duration-200`}
+            aria-label="Next month"
+          >
+            <ChevronRight size={28} className={theme.textPrimary} />
+          </button>
         </div>
+
+        {/* Add Habit Input */}
+        <div className="flex gap-2 w-full max-w-xl mx-auto mb-6">
+          <div className="flex-1 relative">
+            <input
+              type="text"
+              placeholder="Add a new habit..."
+              value={newHabit}
+              onChange={(e) => setNewHabit(e.target.value)}
+              onKeyPress={handleKeyPress}
+              className={`w-full p-3 md:p-4 rounded-lg border ${theme.inputBg} text-base md:text-lg focus:outline-none focus:ring-2 ${theme.inputFocus} shadow-md transition-all ${theme.inputText}`}
+            />
+          </div>
+          <button
+            onClick={addHabit}
+            className={`${theme.btnPrimary} text-white rounded-lg px-3 md:px-4 transition-colors shadow-md flex items-center justify-center`}
+            aria-label="Add habit"
+          >
+            <Plus size={24} />
+          </button>
+        </div>
+
         <div className='overflow-x-auto'>
           <table  >
             <thead>
@@ -183,6 +244,7 @@ export default function HabitTracker() {
              
           </table>
         </div>
+    </div>
     </div>
     
   
