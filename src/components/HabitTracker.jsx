@@ -70,7 +70,7 @@ export default function HabitTracker() {
         document.body.classList.remove("dark-mode");
       }
     }
-  }, [isLoading, darkMode]);
+  }, [darkMode, isLoading]);
 
   const monthYear = currentDate.toLocaleDateString("default", {
     month: "long",
@@ -121,6 +121,7 @@ export default function HabitTracker() {
     setDarkMode(!darkMode);
   };
 
+  // Get theme-based classes and colors
   const getThemeClasses = () => {
     return {
       // Main backgrounds
@@ -174,7 +175,8 @@ export default function HabitTracker() {
 
   return (
     <div
-      className={`${theme.bgMain} min-h-screen w-full flex flex-col items-center p-2 md:p-4 font-sans transition-colors duration-300`}>
+      className={`${theme.bgMain} min-h-screen w-full flex flex-col items-center p-2 md:p-4 font-sans transition-colors duration-300`}
+    >
       {/* Header */}
       <div className='w-full max-w-7xl'>
         <div className='flex justify-between items-center mb-4'>
