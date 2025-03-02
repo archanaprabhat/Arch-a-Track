@@ -42,19 +42,24 @@ export default function HabitTracker() {
     if (savedTheme) {
       setDarkMode(savedTheme === "true");
     } else {
-      const prefersTheme =
+      // Check user's system preference for dark mode
+      const prefersDark =
         window.matchMedia &&
-        window.matchMedia("(prefers-color-scheme:dark)").matches;
-      setDarkMode(prefersTheme);
+        window.matchMedia("(prefers-color-scheme: dark)").matches;
+      setDarkMode(prefersDark);
     }
+
     setIsLoading(false);
   }, []);
+
+  // Save habits to localStorage whenever they change
   useEffect(() => {
     if (!isLoading) {
       localStorage.setItem("habits", JSON.stringify(habits));
     }
   }, [habits, isLoading]);
 
+  // Save theme preference
   useEffect(() => {
     if (!isLoading) {
       localStorage.setItem("darkMode", darkMode.toString());
