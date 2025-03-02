@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 
 export default function HabitTracker() {
+  // Get current date info
   const [currentDate, setCurrentDate] = useState(new Date());
   const [newHabit, setNewHabit] = useState("");
   const [habits, setHabits] = useState([]);
@@ -23,13 +24,13 @@ export default function HabitTracker() {
   const isCurrentMonth =
     today.getMonth() === currentDate.getMonth() &&
     today.getFullYear() === currentDate.getFullYear();
-    const currentDay = today.getDate();
+  const currentDay = today.getDate();
 
   // Load habits and theme preference from localStorage on component mount
   useEffect(() => {
     const savedHabits = localStorage.getItem("habits");
     const savedTheme = localStorage.getItem("darkMode");
-    
+
     if (savedHabits) {
       try {
         setHabits(JSON.parse(savedHabits));
@@ -42,30 +43,36 @@ export default function HabitTracker() {
     if (savedTheme) {
       setDarkMode(savedTheme === "true");
     } else {
-      const prefersTheme =
+      // Check user's system preference for dark mode
+      const prefersDark =
         window.matchMedia &&
-        window.matchMedia("(prefers-color-scheme:dark)").matches;
-      setDarkMode(prefersTheme);
+        window.matchMedia("(prefers-color-scheme: dark)").matches;
+      setDarkMode(prefersDark);
     }
+
     setIsLoading(false);
   }, []);
+
+  // Save habits to localStorage whenever they change
   useEffect(() => {
     if (!isLoading) {
       localStorage.setItem("habits", JSON.stringify(habits));
     }
   }, [habits, isLoading]);
 
+  // Save theme preference
   useEffect(() => {
     if (!isLoading) {
       localStorage.setItem("darkMode", darkMode.toString());
 
+      // Apply dark mode to document body for full page effect
       if (darkMode) {
         document.body.classList.add("dark-mode");
       } else {
         document.body.classList.remove("dark-mode");
       }
     }
-  }, [isLoading, darkMode]);
+  }, [darkMode, isLoading]);
 
   const monthYear = currentDate.toLocaleDateString("default", {
     month: "long",
@@ -112,10 +119,15 @@ export default function HabitTracker() {
     setHabits(newHabits);
   };
 
+  const deleteHabit = (id) => {
+    setHabits(habits.filter((h) => h.id !== id));
+  };
+
   const toggleTheme = () => {
     setDarkMode(!darkMode);
   };
 
+  // Get theme-based classes and colors
   const getThemeClasses = () => {
     return {
       // Main backgrounds
@@ -167,16 +179,28 @@ export default function HabitTracker() {
 
   const theme = getThemeClasses();
 
+  if (isLoading) {
+    return (
+      <div
+        className={`min-h-screen w-full flex justify-center items-center ${theme.bgMain}`}
+      >
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-pink-500"></div>
+      </div>
+    );
+  }
+
   return (
     <div
-      className={`${theme.bgMain} min-h-screen w-full flex flex-col items-center p-2 md:p-4 font-sans transition-colors duration-300`}>
+      className={`${theme.bgMain} min-h-screen w-full flex flex-col items-center p-2 md:p-4 font-sans transition-colors duration-300`}
+    >
       {/* Header */}
-      <div className='w-full max-w-7xl'>
-        <div className='flex justify-between items-center mb-4'>
-          <div className='flex items-center'>
+      <div className="w-full max-w-7xl">
+        <div className="flex justify-between items-center mb-4">
+          <div className="flex items-center">
             <Calendar className={`${theme.textPrimary} mr-2`} size={28} />
             <h1
-              className={`text-3xl md:text-4xl font-bold ${theme.textPrimary}`}>
+              className={`text-3xl md:text-4xl font-bold ${theme.textPrimary}`}
+            >
               Arch•a•Track
             </h1>
           </div>
@@ -185,7 +209,8 @@ export default function HabitTracker() {
             className={`p-2 rounded-full ${theme.bgButtonHover} transition-colors`}
             aria-label={
               darkMode ? "Switch to light mode" : "Switch to dark mode"
-            }>
+            }
+          >
             {darkMode ? (
               <Sun className={theme.textPrimary} size={24} />
             ) : (
@@ -193,32 +218,36 @@ export default function HabitTracker() {
             )}
           </button>
         </div>
+
         {/* Month Navigation */}
-        <div className='flex justify-between items-center w-full max-w-md mx-auto mb-6'>
+        <div className="flex justify-between items-center w-full max-w-md mx-auto mb-6">
           <button
             onClick={() => changeMonth(-1)}
             className={`p-2 ${theme.bgButtonHover} rounded-full transition-colors duration-200`}
-            aria-label='Previous month'>
+            aria-label="Previous month"
+          >
             <ChevronLeft size={28} className={theme.textPrimary} />
           </button>
           <h2
-            className={`text-xl md:text-2xl font-medium italic font-mono ${theme.textPrimary}`}>
+            className={`text-xl md:text-2xl font-medium italic font-mono ${theme.textPrimary}`}
+          >
             {monthYear}
           </h2>
           <button
             onClick={() => changeMonth(1)}
             className={`p-2 ${theme.bgButtonHover} rounded-full transition-colors duration-200`}
-            aria-label='Next month'>
+            aria-label="Next month"
+          >
             <ChevronRight size={28} className={theme.textPrimary} />
           </button>
         </div>
 
         {/* Add Habit Input */}
-        <div className='flex gap-2 w-full max-w-xl mx-auto mb-6'>
-          <div className='flex-1 relative'>
+        <div className="flex gap-2 w-full max-w-xl mx-auto mb-6">
+          <div className="flex-1 relative">
             <input
-              type='text'
-              placeholder='Add a new habit...'
+              type="text"
+              placeholder="Add a new habit..."
               value={newHabit}
               onChange={(e) => setNewHabit(e.target.value)}
               onKeyPress={handleKeyPress}
@@ -228,61 +257,117 @@ export default function HabitTracker() {
           <button
             onClick={addHabit}
             className={`${theme.btnPrimary} text-white rounded-lg px-3 md:px-4 transition-colors shadow-md flex items-center justify-center`}
-            aria-label='Add habit'>
+            aria-label="Add habit"
+          >
             <Plus size={24} />
           </button>
         </div>
 
-        <div className='overflow-x-auto'>
-          <table>
-            <thead>
-              <tr>
-                <th className='border  p-4 text-center font-bold text-lg '>
-                  Habits
-                </th>
-                {Array.from({ length: daysInMonth }, (_, i) => (
-                  <th key={i} className='border p-3 w-16 text-lg '>
-                    {" "}
-                    {i + 1}{" "}
+        {/* Habits Table */}
+        <div
+          className={`w-full overflow-x-auto rounded-lg shadow-lg ${theme.bgCard} mb-6 transition-colors duration-300`}
+        >
+          {habits.length > 0 ? (
+            <table className="w-full border-collapse">
+              <thead>
+                <tr className={theme.bgHeader}>
+                  <th
+                    className={`p-3 text-left font-semibold ${theme.textHeader} border-b ${theme.borderMain} sticky left-0 ${theme.bgHeaderSticky} z-10 w-40 md:w-48`}
+                  >
+                    Habits
                   </th>
-                ))}
-                <th className='border p-4 w-24 font-bold text-lg'>Delete</th>
-              </tr>
-            </thead>
-            <tbody>
-              {habits.map((habit, habitIndex) => (
-                <tr key={habit.id}>
-                  <td className='border p-2 font-medium text-center text-lg'>
-                    {habit.name}
-                  </td>
-                  {habit.checked.map((checked, dayIndex) => (
-                    <td
-                      key={dayIndex}
-                      onClick={() => toggleDay(habitIndex, dayIndex)}
-                      className='border p-2 text-center cursor-pointer hover:bg-red-200 transition-colors'>
-                      {checked ? (
-                        <Check
-                          className='text-green-800 mx-auto'
-                          size={28}
-                          strokeWidth={4}
-                        />
-                      ) : (
-                        <X className='text-red-400 mx-auto' size={28} />
-                      )}
-                    </td>
+                  {Array.from({ length: daysInMonth }, (_, i) => (
+                    <th
+                      key={i}
+                      className={`p-2 min-w-8 w-12 font-medium ${
+                        theme.textHeader
+                      } border-b ${theme.borderMain} text-center ${
+                        isCurrentMonth && i + 1 === currentDay
+                          ? theme.currentDayBg
+                          : ""
+                      }`}
+                    >
+                      {i + 1}
+                    </th>
                   ))}
-                  <td className='p-2 border text-center'>
-                    <button
-                      onClick={() => {
-                        setHabits(habits.filter((h) => h.id !== habit.id));
-                      }}>
-                      <Trash2 size={28} />
-                    </button>
-                  </td>
+                  <th
+                    className={`p-2 w-12 md:w-16 font-semibold ${theme.textHeader} border-b ${theme.borderMain} text-center sticky right-0 ${theme.bgHeaderSticky} z-10`}
+                  >
+                    Delete
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {habits.map((habit, habitIndex) => (
+                  <tr
+                    key={habit.id}
+                    className={`${theme.bgHover} transition-colors`}
+                  >
+                    <td
+                      className={`p-2 md:p-3 font-medium ${theme.textBody} border-b ${theme.borderRow} sticky left-0 ${theme.bgSticky} z-10`}
+                    >
+                      {habit.name}
+                    </td>
+                    {Array.from({ length: daysInMonth }, (_, dayIndex) => (
+                      <td
+                        key={dayIndex}
+                        onClick={() => toggleDay(habitIndex, dayIndex)}
+                        className={`border-b ${
+                          theme.borderRow
+                        } text-center cursor-pointer ${
+                          theme.bgCellHover
+                        } transition-colors ${
+                          isCurrentMonth && dayIndex + 1 === currentDay
+                            ? `${theme.currentDayBg} border-2 ${theme.currentDayBorder}`
+                            : ""
+                        }`}
+                      >
+                        {habit.checked[dayIndex] ? (
+                          <div className="w-full h-10 md:h-12 flex items-center justify-center">
+                            <div
+                              className={`${theme.checkBg} rounded-full p-1`}
+                            >
+                              <Check
+                                className={theme.checkColor}
+                                size={18}
+                                strokeWidth={3}
+                              />
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="w-full h-10 md:h-12 flex items-center justify-center">
+                            <div className="rounded-full p-1">
+                              <X
+                                className={theme.xColor}
+                                size={18}
+                                strokeWidth={2}
+                              />
+                            </div>
+                          </div>
+                        )}
+                      </td>
+                    ))}
+                    <td
+                      className={`p-2 md:p-3 border-b ${theme.borderRow} text-center sticky right-0 ${theme.bgSticky} z-10`}
+                    >
+                      <button
+                        onClick={() => deleteHabit(habit.id)}
+                        className="text-gray-400 hover:text-red-500 transition-colors p-1 rounded-full hover:bg-red-100/20"
+                        aria-label="Delete habit"
+                      >
+                        <Trash2 size={18} />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <div className={`py-12 text-center ${theme.textMuted}`}>
+              <p className="text-xl mb-3">No habits added yet</p>
+              <p>Add your first habit using the input above</p>
+            </div>
+          )}
         </div>
       </div>
     </div>
