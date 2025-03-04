@@ -117,6 +117,10 @@ export default function HabitTracker() {
     setHabits(newHabits);
   };
 
+  const deleteHabit = (id) => {
+    setHabits(habits.filter((h) => h.id !== id))
+  }
+
   const toggleTheme = () => {
     setDarkMode(!darkMode);
   };
