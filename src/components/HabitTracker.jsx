@@ -275,48 +275,97 @@ export default function HabitTracker() {
                   Habits
                 </th>
                 {Array.from({ length: daysInMonth }, (_, i) => (
-                  <th key={i} className='border p-3 w-16 text-lg '>
-                    {" "}
-                    {i + 1}{" "}
+                    <th
+                      key={i}
+                      className={`p-2 min-w-8 w-12 font-medium ${
+                        theme.textHeader
+                      } border-b ${theme.borderMain} text-center ${
+                        isCurrentMonth && i + 1 === currentDay
+                          ? theme.currentDayBg
+                          : ""
+                      }`}
+                    >
+                      {i + 1}
+                    </th>
+                  ))}
+                  <th
+                    className={`p-2 w-12 md:w-16 font-semibold ${theme.textHeader} border-b ${theme.borderMain} text-center sticky right-0 ${theme.bgHeaderSticky} z-10`}
+                  >
+                    Delete
                   </th>
-                ))}
-                <th className='border p-4 w-24 font-bold text-lg'>Delete</th>
               </tr>
             </thead>
             <tbody>
               {habits.map((habit, habitIndex) => (
-                <tr key={habit.id}>
-                  <td className='border p-2 font-medium text-center text-lg'>
+                  <tr
+                    key={habit.id}
+                    className={`${theme.bgHover} transition-colors`}
+                  >
+                    <td
+                      className={`p-2 md:p-3 font-medium ${theme.textBody} border-b ${theme.borderRow} sticky left-0 ${theme.bgSticky} z-10`}
+                    >
                     {habit.name}
                   </td>
-                  {habit.checked.map((checked, dayIndex) => (
+                    {Array.from({ length: daysInMonth }, (_, dayIndex) => (
                     <td
                       key={dayIndex}
                       onClick={() => toggleDay(habitIndex, dayIndex)}
-                      className='border p-2 text-center cursor-pointer hover:bg-red-200 transition-colors'>
-                      {checked ? (
+                        className={`border-b ${
+                          theme.borderRow
+                        } text-center cursor-pointer ${
+                          theme.bgCellHover
+                        } transition-colors ${
+                          isCurrentMonth && dayIndex + 1 === currentDay
+                            ? `${theme.currentDayBg} border-2 ${theme.currentDayBorder}`
+                            : ""
+                        }`}
+                      >
+                        {habit.checked[dayIndex] ? (
+                          <div className="w-full h-10 md:h-12 flex items-center justify-center">
+                            <div
+                              className={`${theme.checkBg} rounded-full p-1`}
+                            >
                         <Check
-                          className='text-green-800 mx-auto'
-                          size={28}
-                          strokeWidth={4}
+                                className={theme.checkColor}
+                                size={18}
+                                strokeWidth={3}
                         />
+                            </div>
+                          </div>
                       ) : (
-                        <X className='text-red-400 mx-auto' size={28} />
+                          <div className="w-full h-10 md:h-12 flex items-center justify-center">
+                            <div className="rounded-full p-1">
+                              <X
+                                className={theme.xColor}
+                                size={18}
+                                strokeWidth={2}
+                              />
+                            </div>
+                          </div>
                       )}
                     </td>
                   ))}
-                  <td className='p-2 border text-center'>
+                    <td
+                      className={`p-2 md:p-3 border-b ${theme.borderRow} text-center sticky right-0 ${theme.bgSticky} z-10`}
+                    >
                     <button
-                      onClick={() => {
-                        setHabits(habits.filter((h) => h.id !== habit.id));
-                      }}>
-                      <Trash2 size={28} />
+                        onClick={() => deleteHabit(habit.id)}
+                        className="text-gray-400 hover:text-red-500 transition-colors p-1 rounded-full hover:bg-red-100/20"
+                        aria-label="Delete habit"
+                      >
+                        <Trash2 size={18} />
                     </button>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
+          ) : (
+            <div className={`py-12 text-center ${theme.textMuted}`}>
+              <p className="text-xl mb-3">No habits added yet</p>
+              <p>Add your first habit using the input above</p>
+            </div>
+          )}
         </div>
       </div>
     </div>
