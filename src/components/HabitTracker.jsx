@@ -118,8 +118,8 @@ export default function HabitTracker() {
   };
 
   const deleteHabit = (id) => {
-    setHabits(habits.filter((h) => h.id !== id))
-  }
+    setHabits(habits.filter((h) => h.id !== id));
+  };
 
   const toggleTheme = () => {
     setDarkMode(!darkMode);
@@ -192,12 +192,13 @@ export default function HabitTracker() {
       className={`${theme.bgMain} min-h-screen w-full flex flex-col items-center p-2 md:p-4 font-sans transition-colors duration-300`}
     >
       {/* Header */}
-      <div className='w-full max-w-7xl'>
-        <div className='flex justify-between items-center mb-4'>
-          <div className='flex items-center'>
+      <div className="w-full max-w-7xl">
+        <div className="flex justify-between items-center mb-4">
+          <div className="flex items-center">
             <Calendar className={`${theme.textPrimary} mr-2`} size={28} />
             <h1
-              className={`text-3xl md:text-4xl font-bold ${theme.textPrimary}`}>
+              className={`text-3xl md:text-4xl font-bold ${theme.textPrimary}`}
+            >
               Arch•a•Track
             </h1>
           </div>
@@ -206,7 +207,8 @@ export default function HabitTracker() {
             className={`p-2 rounded-full ${theme.bgButtonHover} transition-colors`}
             aria-label={
               darkMode ? "Switch to light mode" : "Switch to dark mode"
-            }>
+            }
+          >
             {darkMode ? (
               <Sun className={theme.textPrimary} size={24} />
             ) : (
@@ -214,32 +216,36 @@ export default function HabitTracker() {
             )}
           </button>
         </div>
+
         {/* Month Navigation */}
-        <div className='flex justify-between items-center w-full max-w-md mx-auto mb-6'>
+        <div className="flex justify-between items-center w-full max-w-md mx-auto mb-6">
           <button
             onClick={() => changeMonth(-1)}
             className={`p-2 ${theme.bgButtonHover} rounded-full transition-colors duration-200`}
-            aria-label='Previous month'>
+            aria-label="Previous month"
+          >
             <ChevronLeft size={28} className={theme.textPrimary} />
           </button>
           <h2
-            className={`text-xl md:text-2xl font-medium italic font-mono ${theme.textPrimary}`}>
+            className={`text-xl md:text-2xl font-medium italic font-mono ${theme.textPrimary}`}
+          >
             {monthYear}
           </h2>
           <button
             onClick={() => changeMonth(1)}
             className={`p-2 ${theme.bgButtonHover} rounded-full transition-colors duration-200`}
-            aria-label='Next month'>
+            aria-label="Next month"
+          >
             <ChevronRight size={28} className={theme.textPrimary} />
           </button>
         </div>
 
         {/* Add Habit Input */}
-        <div className='flex gap-2 w-full max-w-xl mx-auto mb-6'>
-          <div className='flex-1 relative'>
+        <div className="flex gap-2 w-full max-w-xl mx-auto mb-6">
+          <div className="flex-1 relative">
             <input
-              type='text'
-              placeholder='Add a new habit...'
+              type="text"
+              placeholder="Add a new habit..."
               value={newHabit}
               onChange={(e) => setNewHabit(e.target.value)}
               onKeyPress={handleKeyPress}
@@ -249,16 +255,23 @@ export default function HabitTracker() {
           <button
             onClick={addHabit}
             className={`${theme.btnPrimary} text-white rounded-lg px-3 md:px-4 transition-colors shadow-md flex items-center justify-center`}
-            aria-label='Add habit'>
+            aria-label="Add habit"
+          >
             <Plus size={24} />
           </button>
         </div>
 
-        <div className='overflow-x-auto'>
-          <table>
+        {/* Habits Table */}
+        <div
+          className={`w-full overflow-x-auto rounded-lg shadow-lg ${theme.bgCard} mb-6 transition-colors duration-300`}
+        >
+          {habits.length > 0 ? (
+            <table className="w-full border-collapse">
             <thead>
-              <tr>
-                <th className='border  p-4 text-center font-bold text-lg '>
+                <tr className={theme.bgHeader}>
+                  <th
+                    className={`p-3 text-left font-semibold ${theme.textHeader} border-b ${theme.borderMain} sticky left-0 ${theme.bgHeaderSticky} z-10 w-40 md:w-48`}
+                  >
                   Habits
                 </th>
                 {Array.from({ length: daysInMonth }, (_, i) => (
