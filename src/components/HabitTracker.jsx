@@ -173,6 +173,16 @@ export default function HabitTracker() {
 
   const theme = getThemeClasses();
 
+  if (isLoading) {
+    return (
+      <div
+        className={`min-h-screen w-full flex justify-center items-center ${theme.bgMain}`}
+      >
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-pink-500"></div>
+      </div>
+    );
+  }
+
   return (
     <div
       className={`${theme.bgMain} min-h-screen w-full flex flex-col items-center p-2 md:p-4 font-sans transition-colors duration-300`}
