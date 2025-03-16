@@ -18,7 +18,8 @@ export default function HabitTracker() {
   const [darkMode, setDarkMode] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Get today's date for highlighting
+ 
+  
   const today = new Date();
   const isCurrentMonth =
     today.getMonth() === currentDate.getMonth() &&
@@ -141,7 +142,7 @@ export default function HabitTracker() {
       // Main backgrounds
       bgMain: darkMode
         ? "bg-gray-900"
-        : "bg-gradient-to-br from-rose-200 to-pink-200",
+        : "bg-gradient-to-br from-rose-200 to-red-200",
       bgCard: darkMode ? "bg-gray-800/90" : "bg-white/80",
       bgHeader: darkMode ? "bg-gray-800" : "bg-rose-100",
       bgHover: darkMode ? "hover:bg-gray-700/70" : "hover:bg-rose-50/70",
