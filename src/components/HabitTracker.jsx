@@ -45,7 +45,7 @@ export default function HabitTracker() {
     } else {
       // Check user's system preference for dark mode
       const prefersDark =
-        window.matchMedia() &&
+        window.matchMedia &&
         window.matchMedia("(prefers-color-scheme: dark)").matches;
       setDarkMode(prefersDark);
     }
